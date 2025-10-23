@@ -8,8 +8,10 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Open index.html",
-            "file": "c:\\Users\\lampa\\Documents\\WebProject\\"
+            "name": "Open active file (Chrome)",
+            "file": "${file}",
+            "cwd": "${workspaceFolder}",
+            "webRoot": "${workspaceFolder}"
         }
     ]
 }
