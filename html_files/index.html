@@ -3,24 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Something</title>
+    <title>Teacher Dashboard</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <nav>
-            <!-- Navigation content goes here -->
+        <nav class="teacher-nav">
+            <div class="teacher-menu">
+                <div class="profile-section">
+                    <div class="profile-image">👩‍🏫</div>
+                    <h2>Teacher Portal</h2>
+                    <p class="teacher-name">Welcome, Professor</p>
+                </div>
+                <ul>
+                    <li><a href="#dashboard" class="active">
+                        <i class="icon">📊</i> Dashboard
+                    </a></li>
+                    <li><a href="#classes">
+                        <i class="icon">👥</i> My Classes
+                    </a></li>
+                    <li><a href="#assignments">
+                        <i class="icon">📚</i> Assignments
+                    </a></li>
+                    <li><a href="#grades">
+                        <i class="icon">📝</i> Grade Management
+                    </a></li>
+                    <li><a href="#calendar">
+                        <i class="icon">📅</i> Schedule
+                    </a></li>
+                    <li><a href="#messages">
+                        <i class="icon">✉️</i> Messages
+                        <span class="badge">3</span>
+                    </a></li>
+                    <li><a href="#resources">
+                        <i class="icon">�</i> Resources
+                    </a></li>
+                    <li><a href="#settings">
+                        <i class="icon">⚙️</i> Settings
+                    </a></li>
+                </ul>
+                <div class="menu-footer">
+                    <a href="#logout" class="logout-btn">
+                        <i class="icon">🚪</i> Logout
+                    </a>
+                </div>
+            </div>
         </nav>
     </header>
 
-    <main>
-        <h1>Welcome to the Something Page</h1>
-        <p id="output">This is a sample HTML file.</p>
-        <script src="test.js"></script>
+    <main class="dashboard-main">
+        <div class="welcome-section">
+            <h1>Welcome Back, Professor</h1>
+            <p class="date" id="current-date"></p>
+        </div>
+
+        <div class="quick-stats">
+            <div class="stat-card">
+                <h3>Προβολή και Δημιουργία θεμάτων προς ανάθεση</h3>
+                <p class="stat-number">5</p>
+            </div>
+            <div class="stat-card">
+                <h3>Αρχική ανάθεση θέματος σε φοιτητή</h3>
+                <p class="stat-number">12</p>
+            </div>
+            <div class="stat-card">
+                <h3>Προβολή λίστας διπλωματικών</h3>
+                <p class="stat-number">3</p>
+            </div>
+            <div class="stat-card">
+                <h3>Προβολή προσκλήσεων συμμετοχής σε τριμελή</h3>
+                <p class="stat-number">2</p>
+            </div>
+            <div class="stat-card">
+                <h3>Προβολή στατιστικών</h3>
+                <p class="stat-number">4</p>
+            </div>
+             <div class="stat-card">
+                <h3>Διαχείριση διπλωματικών εργασιών:</h3>
+                <p class="stat-number">2</p>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <section class="upcoming-classes">
+                <h2>Today's Classes</h2>
+                <div class="class-list">
+                    <!-- Class items will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <section class="recent-submissions">
+                <h2>Recent Submissions</h2>
+                <div class="submission-list">
+                    <!-- Submissions will be populated by JavaScript -->
+                </div>
+            </section>
+        </div>
     </main>
 
-    <footer>
-        <!-- Footer content goes here -->
+    <footer class="main-footer">
+        <p>&copy; 2025 Teacher Portal. All rights reserved.</p>
     </footer>
+
+    <script src="test.js"></script>
 </body>
 </html>
