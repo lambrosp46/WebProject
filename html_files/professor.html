@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Πλατφόρμα Διδάσκοντα</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="teacher-nav">
+            <div class="teacher-menu">
+                <div class="profile-section">
+                    <div class="profile-image">👩‍🏫</div>
+                    <h2>Πύλη Διδάσκοντα</h2>
+                    <p class="teacher-name">Καλωσήρθατε, Καθηγητά</p>
+                </div>
+                <div class="menu-footer">
+                    <a href="#logout" class="logout-btn">
+                        <i class="icon">�</i> Αποσύνδεση
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="dashboard-main">
+        <!-- Κουμπιά γρήγορης πρόσβασης -->
+        <div class="action-buttons" role="toolbar" aria-label="Κύριες λειτουργίες">
+            <button class="btn action-btn active" data-target="create-topics">
+                <i class="icon">�</i>
+                <span>Προβολή & Δημιουργία Θεμάτων</span>
+            </button>
+            <button class="btn action-btn" data-target="assign-topic">
+                <i class="icon">�</i>
+                <span>Ανάθεση Θέματος</span>
+            </button>
+            <button class="btn action-btn" data-target="thesis-list">
+                <i class="icon">�</i>
+                <span>Λίστα Διπλωματικών</span>
+            </button>
+            <button class="btn action-btn" data-target="invitations">
+                <i class="icon">✉️</i>
+                <span>Προσκλήσεις Τριμελούς</span>
+            </button>
+            <button class="btn action-btn" data-target="statistics">
+                <i class="icon">📊</i>
+                <span>Στατιστικά</span>
+            </button>
+            <button class="btn action-btn" data-target="manage-thesis">
+                <i class="icon">⚙️</i>
+                <span>Διαχείριση Διπλωματικών</span>
+            </button>
+        </div>
+
+        <!-- Ενότητες περιεχομένου -->
+        <div class="content-sections">
+            <!-- 1. Προβολή και Δημιουργία θεμάτων -->
+            <section id="create-topics" class="panel section-active">
+                <h2>Προβολή και Δημιουργία Θεμάτων</h2>
+                <div class="create-topic-form">
+                    <h3>Νέο Θέμα Διπλωματικής</h3>
+                    <form id="new-topic-form">
+                        <div class="form-group">
+                            <label>Τίτλος
+                                <input type="text" id="topic-title" required>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Σύνοψη
+                                <textarea id="topic-summary" rows="4" required></textarea>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Αναλυτική περιγραφή (PDF)
+                                <input type="file" id="topic-pdf" accept=".pdf">
+                            </label>
+                        </div>
+                        <button type="submit" class="btn submit-btn">Καταχώρηση</button>
+                    </form>
+                </div>
+                <div class="topics-list">
+                    <h3>Διαθέσιμα Θέματα</h3>
+                    <div class="topics-grid" id="available-topics">
+                        <!-- Θα συμπληρωθεί με JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Ανάθεση θέματος -->
+            <section id="assign-topic" class="panel">
+                <h2>Ανάθεση Θέματος σε Φοιτητή</h2>
+                <div class="search-student">
+                    <input type="text" id="student-search" placeholder="Αναζήτηση με ΑΜ ή Ονοματεπώνυμο">
+                    <div class="search-results" id="student-results">
+                        <!-- Αποτελέσματα αναζήτησης -->
+                    </div>
+                </div>
+                <div class="assignment-form" style="display:none;">
+                    <!-- Φόρμα ανάθεσης -->
+                </div>
+            </section>
+
+            <!-- 3. Λίστα διπλωματικών -->
+            <section id="thesis-list" class="panel">
+                <h2>Λίστα Διπλωματικών Εργασιών</h2>
+                <div class="list-filters">
+                    <select id="status-filter">
+                        <option value="all">Όλες οι καταστάσεις</option>
+                        <option value="pending">Υπό ανάθεση</option>
+                        <option value="active">Ενεργή</option>
+                        <option value="completed">Περατωμένη</option>
+                        <option value="cancelled">Ακυρωμένη</option>
+                    </select>
+                    <select id="role-filter">
+                        <option value="all">Όλοι οι ρόλοι</option>
+                        <option value="supervisor">Επιβλέπων</option>
+                        <option value="committee">Μέλος τριμελούς</option>
+                    </select>
+                    <div class="export-buttons">
+                        <button class="btn" onclick="exportList('csv')">Εξαγωγή CSV</button>
+                        <button class="btn" onclick="exportList('json')">Εξαγωγή JSON</button>
+                    </div>
+                </div>
+                <div class="thesis-table-container">
+                    <!-- Πίνακας διπλωματικών -->
+                </div>
+            </section>
+
+            <!-- 4. Προσκλήσεις -->
+            <section id="invitations" class="panel">
+                <h2>Προσκλήσεις Συμμετοχής σε Τριμελή</h2>
+                <div class="invitations-list">
+                    <!-- Λίστα προσκλήσεων -->
+                </div>
+            </section>
+
+            <!-- 5. Στατιστικά -->
+            <section id="statistics" class="panel">
+                <h2>Στατιστικά Στοιχεία</h2>
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <h3>Μέσος Χρόνος Περάτωσης</h3>
+                        <canvas id="completion-time-chart"></canvas>
+                    </div>
+                    <div class="stats-card">
+                        <h3>Μέσος Βαθμός</h3>
+                        <canvas id="average-grade-chart"></canvas>
+                    </div>
+                    <div class="stats-card">
+                        <h3>Συνολικό Πλήθος</h3>
+                        <canvas id="total-count-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Διαχείριση -->
+            <section id="manage-thesis" class="panel">
+                <h2>Διαχείριση Διπλωματικών Εργασιών</h2>
+                <div class="management-area">
+                    <!-- Περιοχή διαχείρισης ανάλογα με την κατάσταση -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 Πανεπιστήμιο Πατρών - Πλατφόρμα Διαχείρισης Διπλωματικών</p>
+    </footer>
+
+    <script src="test.js"></script>
+</body>
+</html>
