@@ -238,6 +238,162 @@ function exportList(format) {
     a.remove();
 }
 
+// Secretary: mock data and UI
+const mockTheses = [
+    {
+        id: 1,
+        title: 'Προχωρημένη Ανάλυση Δεδομένων',
+        desc: 'Μελέτη αλγορίθμων και εφαρμογές σε μεγάλες κλίμακες.',
+        status: 'active',
+        assigned: '2025-06-15T09:00:00Z',
+        committee: ['Καθηγητής Α. Παπαδόπουλος', 'Επίκουρος Β. Νικολάου'],
+        grade: null,
+        repoLink: null
+    },
+    {
+        id: 2,
+        title: 'Δίκτυα Νευρωνικών Δικτύων',
+        desc: 'Εφαρμογές deep learning σε εικόνα και ήχο.',
+        status: 'under_review',
+        assigned: '2025-09-20T11:30:00Z',
+        committee: ['Καθηγητής Γ. Κωνσταντίνου', 'Επίκουρος Δ. Σταύρου'],
+        grade: 8.5,
+        repoLink: 'https://nimertis.example/student123'
+    },
+    {
+        id: 3,
+        title: 'Ενεργειακά Συστήματα',
+        desc: 'Μελέτη αποδοτικότητας ανανεώσιμων πηγών.',
+        status: 'completed',
+        assigned: '2024-11-05T10:00:00Z',
+        committee: ['Καθηγητής Ε. Παπαϊωάννου'],
+        grade: 9.0,
+        repoLink: 'https://nimertis.example/student456'
+    }
+];
+
+let selectedThesis = null;
+
+function renderSecretaryTheses() {
+    const ul = document.getElementById('secretary-theses');
+    if (!ul) return;
+    ul.innerHTML = '';
+    // show only active and under_review
+    mockTheses.filter(t => t.status === 'active' || t.status === 'under_review')
+        .forEach(t => {
+            const li = document.createElement('li');
+            li.className = 'thesis-card';
+            li.style.cursor = 'pointer';
+            li.innerHTML = `<strong>${t.title}</strong> <div class="hint">${t.status === 'active' ? 'Ενεργή' : 'Υπό Εξέταση'}</div>`;
+            li.addEventListener('click', () => { showThesisDetails(t.id); });
+            ul.appendChild(li);
+        });
+}
+
+function showThesisDetails(id) {
+    const t = mockTheses.find(x => x.id === id);
+    if (!t) return;
+    selectedThesis = t;
+    document.getElementById('thesis-details').style.display = 'block';
+    document.getElementById('detail-title').textContent = t.title;
+    document.getElementById('detail-desc').textContent = t.desc;
+    document.getElementById('detail-status').textContent = t.status === 'active' ? 'Ενεργή' : (t.status === 'under_review' ? 'Υπό Εξέταση' : t.status);
+    document.getElementById('detail-assigned').textContent = formatDateLocal(t.assigned);
+    document.getElementById('detail-timesince').textContent = timeSince(t.assigned);
+    const cl = document.getElementById('detail-committee');
+    cl.innerHTML = '';
+    (t.committee || []).forEach(m => { const li = document.createElement('li'); li.textContent = m; cl.appendChild(li); });
+
+    // show appropriate manage area
+    document.getElementById('manage-active').style.display = t.status === 'active' ? 'block' : 'none';
+    document.getElementById('manage-review').style.display = t.status === 'under_review' ? 'block' : 'none';
+}
+
+function initSecretaryUI() {
+    // wire menu links and action buttons (reuse student handlers for consistent behavior)
+    initMenuLinks();
+    initActionButtons();
+
+    // initial render
+    renderSecretaryTheses();
+
+    // JSON import
+    const jsonInput = document.getElementById('json-import');
+    if (jsonInput) {
+        jsonInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const obj = JSON.parse(reader.result);
+                    // basic validation and stats
+                    const students = obj.students || [];
+                    const teachers = obj.teachers || [];
+                    localStorage.setItem('importedData', JSON.stringify(obj));
+                    document.getElementById('import-result').innerHTML = `Εισήχθησαν ${students.length} φοιτητές και ${teachers.length} διδάσκοντες.`;
+                } catch (err) {
+                    document.getElementById('import-result').textContent = 'Σφάλμα ανάγνωσης JSON: ' + err.message;
+                }
+            };
+            reader.readAsText(file, 'utf-8');
+        });
+    }
+
+    // Manage actions
+    const saveGsBtn = document.getElementById('save-gs');
+    if (saveGsBtn) {
+        saveGsBtn.addEventListener('click', () => {
+            if (!selectedThesis) { alert('Επιλέξτε πρώτα μια ΔΕ.'); return; }
+            const gs = document.getElementById('gs-number').value;
+            const exam = document.getElementById('exam-number').value;
+            selectedThesis.gsNumber = gs;
+            selectedThesis.examNumber = exam;
+            alert('Καταχωρήθηκε ο ΑΠ/ΓΣ.');
+            renderSecretaryTheses();
+        });
+    }
+
+    const cancelBtn = document.getElementById('cancel-assignment');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            const area = document.getElementById('cancel-area');
+            area.style.display = area.style.display === 'none' ? 'block' : 'none';
+        });
+    }
+
+    const confirmCancel = document.getElementById('confirm-cancel');
+    if (confirmCancel) {
+        confirmCancel.addEventListener('click', () => {
+            if (!selectedThesis) { alert('Επιλέξτε πρώτα μια ΔΕ.'); return; }
+            const cancelGs = document.getElementById('cancel-gs').value;
+            const reason = document.getElementById('cancel-reason').value;
+            selectedThesis.status = 'cancelled';
+            selectedThesis.cancelGs = cancelGs;
+            selectedThesis.cancelReason = reason;
+            alert('Η ανάθεση ακυρώθηκε και καταχωρήθηκε ο λόγος.');
+            document.getElementById('thesis-details').style.display = 'none';
+            renderSecretaryTheses();
+        });
+    }
+
+    const markCompletedBtn = document.getElementById('mark-completed');
+    if (markCompletedBtn) {
+        markCompletedBtn.addEventListener('click', () => {
+            if (!selectedThesis) { alert('Επιλέξτε πρώτα μια ΔΕ.'); return; }
+            // require grade and repoLink for completion
+            if (!selectedThesis.grade || !selectedThesis.repoLink) {
+                alert('Δεν υπάρχει καταχωρημένος βαθμός ή σύνδεσμος αποθετηρίου.');
+                return;
+            }
+            selectedThesis.status = 'completed';
+            alert('Η ΔΕ σημειώθηκε ως Περατωμένη.');
+            document.getElementById('thesis-details').style.display = 'none';
+            renderSecretaryTheses();
+        });
+    }
+}
+
 // Initialize based on page type
 function init() {
     // Common date element
@@ -248,7 +404,9 @@ function init() {
     }
 
     // Detect page type and initialize appropriate UI
-    if (document.querySelector('.teacher-nav')) {
+    if (document.querySelector('.secretary-nav')) {
+        initSecretaryUI();
+    } else if (document.querySelector('.teacher-nav')) {
         initProfessorUI();
     } else if (document.querySelector('.student-nav')) {
         // Student UI initialization
@@ -256,14 +414,10 @@ function init() {
         initMenuLinks();
         initActionButtons();
         renderSupervisors();
-        document.getElementById('save-profile').addEventListener('click', saveProfile);
-        document.getElementById('thesis-state').addEventListener('change', handleStateChange);
-        document.getElementById('save-review').addEventListener('click', () => { 
-            alert('Πληροφορίες εξέτασης αποθηκεύτηκαν τοπικά (demo).'); 
-        });
-        document.getElementById('save-completed').addEventListener('click', () => { 
-            alert('Σύνδεσμος αποθετηρίου αποθηκεύτηκε (demo).'); 
-        });
+        const sp = document.getElementById('save-profile'); if (sp) sp.addEventListener('click', saveProfile);
+        const ts = document.getElementById('thesis-state'); if (ts) ts.addEventListener('change', handleStateChange);
+        const sr = document.getElementById('save-review'); if (sr) sr.addEventListener('click', () => { alert('Πληροφορίες εξέτασης αποθηκεύτηκαν τοπικά (demo).'); });
+        const sc = document.getElementById('save-completed'); if (sc) sc.addEventListener('click', () => { alert('Σύνδεσμος αποθετηρίου αποθηκεύτηκε (demo).'); });
         loadThesisMock();
         handleStateChange();
     }
